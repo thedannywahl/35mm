@@ -3,6 +3,11 @@
     'use strict';
 
     var colors={meta:{opts:opts,warn:{},error:{}},colors:{}};
+    var opts=opts||{};
+    opts.count=opts.count||1,
+    opts.speed=opts.speed||128,
+    opts.color=opts.color||"rgb";
+    var img = this;
 
     if(!this.has("img")){
       colors.meta.error.noimg="No image in selector descendants.";
@@ -10,10 +15,37 @@
       return colors;
     }
 
-    var opts=opts||{};
-    opts.count=opts.count||1,
-    opts.speed=opts.speed||128,
-    opts.color=opts.color||"rgb";
+    function toColor(o) {
+      var c = o;
+      switch(opts.color) {
+        case "rgb":c=toRGB(o);case "hex":c=toHEX(o);case "hsl":c=toHSL(o);
+        case "rgba":c=toRGB(o,true);case "hexa":c=toHEX(o,true);case "hsla":c=toHSL(o, true);
+        default:
+          if($.inArray(opts.color,["rgb","rgba","hex","hexa","hsl","hsla"]) == -1) {
+            colors.meta.warn.badcolor="bad color option (" + opts.color + "), requires: rgb(a), hex(a), or hsl(a).";
+            console.warn(colors.meta.warn.badcolor);
+          }
+          c=toRGB(o);
+      }
+      return c;
+    }
+
+    function toRGB(o, a) {
+      return c;
+    }
+
+    function toHEX(o, a) {
+      return c;
+    }
+
+    function toHSL(o, a) {
+      return c;
+    }
+
+    function getColor(img, q) {
+      console.log("getColor of: ", img);
+      console.log("getColor count: ", q);
+    }
 
     if(typeof opts.speed=="string") {
       switch(opts.speed){
@@ -29,7 +61,6 @@
         opts.speed = 128;
     }
 
-    var img = this;
     if(!img.is("img")) {
       colors.meta.warn.notimg="Selector is not img, using .find()";
       console.warn(colors.meta.warn["notimg"]);
@@ -41,29 +72,15 @@
       }
     }
 
-    function toColor(o) {
-      switch(opts.color) {
-        case "rgb":toRGB(o);case "hex":toHEX(o);case "hsl":toHSL(o);
-        case "rgba":toRGBA(o,true);case "hexa":toHEXA(o,true);case "hsla":toHSLA(o, true);
-        default:
-          if($.inArray(opts.color,["rgb","rgba","hex","hexa","hsl","hsla"]) == -1) {
-            colors.meta.warn.badcolor="bad color option (" + opts.color + "), requires: rgb(a), hex(a), or hsl(a).";
-            console.warn(colors.meta.warn.badcolor);
-          }
-          toRGB(o);
+    for(var i=0;i<opts.count;i++) {
+      var c=getColor(img.attr("src"), i);
+      c=toColor(c);
+      colors.colors[i]=c;
+      if(i==0) {
+        colors.colors.primary=c;
+      } else if (i==1) {
+        colors.colors.secondary=c;
       }
-    }
-
-    function toRGB(o, a) {
-
-    }
-
-    function toHEX(o, a) {
-
-    }
-
-    function toHSL(o, a) {
-
     }
 
     return colors;
