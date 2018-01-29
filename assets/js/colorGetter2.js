@@ -6,7 +6,8 @@
     var opts=opts||{};
     opts.count=opts.count||1,
     opts.speed=opts.speed||128,
-    opts.color=opts.color||"rgb";
+    opts.color=opts.color||"rgb",
+    opts.exclude=opts.exclude||[];
     var img = this;
 
     if(!this.has("img")){
